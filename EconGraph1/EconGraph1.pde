@@ -1,135 +1,48 @@
-EconGraph econGraph;
+PersonPopulation pop;
 
 void setup() {
   
   int numNodes = 100;
+  //data state
+  NetworkEngine _engine = new NetworkEngine(numNodes);
   
+  
+  //visual state
   size(1000, 1000);
+  //int numberOfNodes, int xStart,int yStart,int nodeSeperation, int maxColCount
+  LocationState _locationState = new LocationState(numNodes, 30, 30, 50, 12);
+  //create the rendering population
+  pop = new PersonPopulation(20);
+  pop.CreatePopulation(_engine,_locationState);
+  
+  /*
   econGraph = new EconGraph(30, 30, 50, 20);
   //add inital set of nodes
   for (int i = 0; i < numNodes; i++) {
     econGraph.addPersonNode();
   }
+  */
 }
 
 void draw() {
   background(50);
-  econGraph.run();
+  pop.run();
 }
 
-class EconGraph {
-   ArrayList<PersonNode> personNodes;
-   //Keep track of location of the last person node added;
-   //defaulting first Loc  to 10,, 10 but be overridden with constructor
-
-   int xStart = 10;
-   int yStart = 10;
-   int pNodeSize = 20; //size of person nodes
-   PVector nextPersonNodeLoc = new PVector(xStart , yStart);
-   
-   int nodeSeperation = 20;
-   //Keep track of total node count for positioning
-   int nodeCount = 0;
-   //Maximum number of nodes that can go in each column
-   int maxColCount = 12;
-   
-   //todo - look up multiple constructors
-   /*
-   EconGraph(){
-     nextPersonNodeLoc.set(xStart,yStart); 
-     personNodes = new ArrayList<PersonNodes>();
-   }
-   */
-   
-   EconGraph(int _xStart,int _yStart,int _nodeSeperation, int personNodeSize){
-     xStart = _xStart;
-     yStart = _yStart;
-     pNodeSize = personNodeSize;
-     nextPersonNodeLoc.set(xStart,yStart); 
-     personNodes = new ArrayList<PersonNode>();
-     //EconGraph();
-     
-     nodeSeperation = _nodeSeperation;
-   }
-   
-   
-   void run(){
-    for (PersonNode n : personNodes) {
-      n.run();  // Passing the entire list of boids to each boid individually
-    }
-   }
-   
-   void addPersonNode(){
-     //calculate next location
-     PersonNode pnode = new PersonNode(nextPersonNodeLoc.x, nextPersonNodeLoc.y, pNodeSize);
-      personNodes.add(pnode);
-      nodeCount += 1;
-      setNextLocation();
-   }
-   
-   void addPersonNode(PersonNode pNode){
-     //calculate next location
-      pNode.setLocation(nextPersonNodeLoc.x, nextPersonNodeLoc.y);
-      pNode.setSize(pNodeSize);
-      personNodes.add(pNode);
-      nodeCount += 1;
-      setNextLocation();
-   }
-   
-   //assumes nodeCount is incremented first
-   void setNextLocation(){
-     if(nodeCount % maxColCount == 0){
-       //start new column
-        nextPersonNodeLoc.
-          set(nextPersonNodeLoc.x + nodeSeperation,yStart); 
-     }else{
-       //continue down column
-       nextPersonNodeLoc.
-          set(nextPersonNodeLoc.x,nextPersonNodeLoc.y + nodeSeperation); 
-     }
-   }
-}
-
-class PersonNode {
-
-  
-  PVector pos = new PVector(0,0);
-  int diameter = 50;
-  //Keep track of the followers for each person(node)
-  ArrayList<PersonNode> followers;
-  ArrayList<PersonNode> following;
-  
-  
-  
-  void setLocation(float xPos, float yPos){
-    pos.set(xPos,yPos); 
-  }
-  
-     void setSize(int _diameter){
-       diameter = _diameter;
-     }
-      
-  
-  PersonNode(float xPos, float yPos, int _diameter){
-    diameter = _diameter;
-     pos.set(xPos,yPos); 
-  }
-  
-   void run() {
-    render();
-  }
-
-  
-  void render () {
-    ellipse(pos.x, pos.y, diameter, diameter);
-  }
-}
 
 
 class Edge {
+  PVector start = new PVector(0,0);
+  PVector end = new PVector(0,0);
+  
+  Edge (PVector start, PVector end){
+    this.start = start;
+    this.end = end;
+  }
   
   void render(){
-    
+    line(start.x, start.y, end.x, end.y);
+    stroke(126);
   }
 }
 
@@ -140,21 +53,24 @@ class NetworkEngine
   int size;
   int followersMin = 2;
   int followersMax = 30;
-  ArrayList<NetworkNode> nodes;
+  ArrayList<NetworkNode> nodes = new ArrayList<NetworkNode>();
   
   NetworkEngine (int _size){
     size = _size;
     //add inital set of nodes
     for (int i = 0; i < size; i++) {
+      //set the id prop to be an it's index, although I am not currently getting by index in the addRandomFollowings fxn
+      //todo - get by id or make id a guid
       NetworkNode n = new NetworkNode(i);
       nodes.add(n);
     }
-    
+    //once the nodes are added, create relationships between them
+    AddRandomFollowings();
   }
   
   void AddRandomFollowings(){
     for(NetworkNode n : nodes){
-      //to do - normally distribute 
+      //todo - normally distribute 
       int numFollowers = round(random(followersMin,followersMax));
       for(int i=0; i < numFollowers; i++){
         int node2followId = round(random(0,size-1));
@@ -183,8 +99,8 @@ class NetworkNode{
   ArrayList<NetworkNode> followers;
   ArrayList<NetworkNode> following;
   
-  NetworkNode(int _id){
-    id = _id;
+  NetworkNode(int id){
+    this.id = id;
   }
   
   void addFollower(NetworkNode n){
@@ -196,4 +112,4 @@ class NetworkNode{
   }
   
   
-} //?
+} 
