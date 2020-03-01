@@ -2,7 +2,7 @@ class PersonNode {
 
   PVector pos = new PVector(0,0);
   int diameter = 50;
-  ArrayList<Edge> edges;
+  ArrayList<Edge> edges = new ArrayList<Edge>();
   
   void addEdge(Edge e){
    edges.add(e); 

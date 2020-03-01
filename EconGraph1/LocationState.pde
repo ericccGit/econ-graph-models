@@ -36,7 +36,7 @@ class LocationState {
    }
    
    void SetLocations(){
-     for(int i = 0; i < nodeCount; i++){
+     for(int i = 0; i < numberOfNodes; i++){
        Locations.add(new PVector(nextPersonNodeLoc.x, nextPersonNodeLoc.y));
      nodeCount += 1;
      setNextLocation();
