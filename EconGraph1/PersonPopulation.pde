@@ -1,5 +1,5 @@
 class PersonPopulation {
-   ArrayList<PersonNode> personNodes;
+   ArrayList<PersonNode> personNodes = new  ArrayList<PersonNode>();
   //int numberOfNodes;
   int personNodeSize;
   
@@ -12,8 +12,12 @@ class PersonPopulation {
    
    void CreatePopulation(NetworkEngine engine, LocationState locState){
      //todo - take min size 
+     println("engine size: " + str(engine.size));
      for(int i = 0; i < engine.size; i++){
+       
        PersonNode pnode = new PersonNode(locState.Locations.get(i).x, locState.Locations.get(i).y, personNodeSize);
+       println("i: " + str(i));
+       //TODO - add edges ***
       personNodes.add(pnode);
      }
    }
