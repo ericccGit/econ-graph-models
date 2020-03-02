@@ -1,0 +1,13 @@
+class Product {
+   String name = "";
+   float cost;
+   //todo - facts 
+   
+   
+   Product(String name, float cost){
+     this.name = name;
+     this.cost = cost;
+     //this.numberOfNodes = numberOfNodes;
+   }
+   
+}
